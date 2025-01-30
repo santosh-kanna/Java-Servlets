@@ -1,0 +1,35 @@
+package demo;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+@WebServlet("/submit")
+public class Loginserv extends HttpServlet {  
+
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String username=req.getParameter("username"); 
+		String password=req.getParameter("password");
+		
+		Serviceservlet service= new Serviceservlet();
+		boolean isValidUser=service.validateLogin(username,password);
+		
+		if(isValidUser) {
+			RequestDispatcher dispatcher=req.getRequestDispatcher("home.html");
+			dispatcher.forward(req, resp);
+		}else {
+			PrintWriter pw=resp.getWriter();
+			pw.println("<h1>Invalid Username or Password</h1>");
+			RequestDispatcher dispatcher = req.getRequestDispatcher("login.html");
+			dispatcher.include(req, resp);
+		}
+	
+	}
+	
+}
